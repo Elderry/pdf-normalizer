@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "PDFHelper": {
+      "commandName": "Project",
+      "commandLineArgs": "\"C:\\Users\\Elder\\OneDrive\\Collections\\Documents\\Computers & Techology\""
+    },
+    "Help": {
+      "commandName": "Project",
+      "commandLineArgs": "--help"
+    }
+  }
+}
