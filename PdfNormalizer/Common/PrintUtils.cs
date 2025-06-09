@@ -1,4 +1,7 @@
-namespace PDFHelper.Common
+using System;
+using System.Linq;
+
+namespace PdfNormalizer.Common
 {
     internal static class PrintUtils
     {
@@ -12,7 +15,7 @@ namespace PDFHelper.Common
             foreach (string segment in segments)
             {
                 bool printed = false;
-                foreach (ConsoleColor color in Enum.GetValues(typeof(ConsoleColor)).Cast<ConsoleColor>())
+                foreach (ConsoleColor color in Enum.GetValues<ConsoleColor>().Cast<ConsoleColor>())
                 {
                     if (segment.StartsWith(color.ToString(), StringComparison.CurrentCultureIgnoreCase))
                     {

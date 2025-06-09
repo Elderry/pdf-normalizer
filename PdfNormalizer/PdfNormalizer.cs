@@ -1,14 +1,18 @@
-﻿using iText.Kernel.Pdf;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
+using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Navigation;
 using iText.Kernel.XMP;
 using iText.Kernel.XMP.Impl;
 using iText.Kernel.XMP.Options;
 
-using PDFHelper.Common;
+using PdfNormalizer.Common;
 
-using Utils = PDFHelper.Common.Utils;
+using Utils = PdfNormalizer.Common.Utils;
 
-namespace PDFHelper
+namespace PdfNormalizer
 {
     internal class PDFNormalizer
     {
@@ -138,7 +142,7 @@ namespace PDFHelper
                 () => catalog.SetPageLayout(PdfName.TwoPageRight),
                 $"Fix by setting the page layout to [<DarkRed>{PdfName.TwoPageRight}</DarkRed>].");
 
-            PdfArray? openDestArray = (catalog.GetPdfObject().Get(PdfName.OpenAction) as PdfDictionary)!.Get(PdfName.D) as PdfArray;
+            PdfArray openDestArray = (catalog.GetPdfObject().Get(PdfName.OpenAction) as PdfDictionary)!.Get(PdfName.D) as PdfArray;
             int openDestNumber = pdfDoc.GetPageNumber(openDestArray!.Get(0) as PdfDictionary);
             IssueUtils.Fix(
                 openDestNumber != 1,
@@ -149,7 +153,7 @@ namespace PDFHelper
                 () => openDestArray.Set(0, pdfDoc.GetPage(1).GetPdfObject()),
                 $"Fix by setting the page number to [<DarkRed>1</DarkRed>].");
 
-            PdfName? destLocation = openDestArray!.Get(1) as PdfName;
+            PdfName destLocation = openDestArray!.Get(1) as PdfName;
             IssueUtils.Fix(
                 destLocation != PdfName.Fit,
                 "PDF open destination is not valid. " +
@@ -209,8 +213,8 @@ namespace PDFHelper
                 $"Fix by trimming the bookmark title to [<DarkBlue>{Utils.Trim(bookMarkTitle)}</DarkBlue>]");
 
             PdfObject bookMarkDest = pdfOutline.GetDestination().GetPdfObject();
-            PdfArray? bookMarkDestArray = bookMarkDest as PdfArray;
-            PdfString? bookMarkDestString = bookMarkDest as PdfString;
+            PdfArray bookMarkDestArray = bookMarkDest as PdfArray;
+            PdfString bookMarkDestString = bookMarkDest as PdfString;
 
             bool bookMarkDestIsInvalid = (bookMarkDestArray == null || bookMarkDestArray.Size() < 2 || bookMarkDestArray.Get(1) == null) && bookMarkDestString == null;
             IssueUtils.Fix(
@@ -221,7 +225,7 @@ namespace PDFHelper
 
             if (bookMarkDestArray != null)
             {
-                PdfName? destLocation = bookMarkDestArray!.Get(1) as PdfName;
+                PdfName destLocation = bookMarkDestArray!.Get(1) as PdfName;
 
                 IssueUtils.Fix(
                     destLocation != PdfName.Fit,
@@ -249,14 +253,14 @@ namespace PDFHelper
         private static void NormalizeSingleOutline(PdfDocument pdfDoc, PdfOutline pdfOutline, PdfString bookMarkDestString)
         {
             IDictionary<PdfString, PdfObject> names = pdfDoc.GetCatalog().GetNameTree(PdfName.Dests).GetNames();
-            PdfArray? namedDest = names[bookMarkDestString] as PdfArray;
+            PdfArray namedDest = names[bookMarkDestString] as PdfArray;
             PdfArray bookMarkDestArray = [namedDest!.Get(0), PdfName.Fit];
             pdfOutline.AddDestination(PdfDestination.MakeDestination(bookMarkDestArray));
         }
 
         private static void NormalizeDestArray(PdfArray destArray)
         {
-            PdfName? destLocation = destArray!.Get(1) as PdfName;
+            PdfName destLocation = destArray!.Get(1) as PdfName;
 
             if (destLocation == PdfName.FitH || destLocation == PdfName.FitBH)
             {

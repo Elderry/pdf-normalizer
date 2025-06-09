@@ -1,4 +1,7 @@
-namespace PDFHelper.Common
+using System;
+using System.Collections.Generic;
+
+namespace PdfNormalizer.Common
 {
     internal class IssueUtils
     {
@@ -7,9 +10,9 @@ namespace PDFHelper.Common
             string issueMessage,
             string pdfName,
             bool dry = false,
-            List<FixRecord>? fixRecords = null,
-            Action? recoverAction = null,
-            string? recoverMessage = null)
+            List<FixRecord> fixRecords = null,
+            Action recoverAction = null,
+            string recoverMessage = null)
         {
             if (!assert) { return; }
 

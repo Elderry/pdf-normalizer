@@ -1,8 +1,9 @@
-﻿using System.CommandLine;
+﻿using System.Collections.Generic;
+using System.CommandLine;
 
-using PDFHelper.Common;
+using PdfNormalizer.Common;
 
-namespace PDFHelper
+namespace PdfNormalizer
 {
     internal class Program
     {
