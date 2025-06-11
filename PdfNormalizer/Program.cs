@@ -1,40 +1,32 @@
 ﻿using System.Collections.Generic;
 using System.CommandLine;
 
+using PdfNormalizer;
 using PdfNormalizer.Common;
 
-namespace PdfNormalizer
+Argument<ICollection<string>> argumentPath = new("path")
 {
-    internal class Program
-    {
-        static void Main(string[] args)
-        {
-            Argument<ICollection<string>> argumentPath = new("path")
-            {
-                Arity = ArgumentArity.ZeroOrMore,
-                Description = "Path(s) of PDF files, default to current directory if not provided."
-            };
+    Arity = ArgumentArity.ZeroOrMore,
+    Description = "Path(s) of PDF files, default to current directory if not provided."
+};
 
-            Option<bool> dryOption = new("--dry")
-            {
-                Arity = ArgumentArity.ZeroOrOne,
-                Description = "Whether to try fix PDF file violations."
-            };
+Option<bool> dryOption = new("--dry")
+{
+    Arity = ArgumentArity.ZeroOrOne,
+    Description = "Whether to try fix PDF file violations."
+};
 
-            RootCommand rootCommand = new()
-            {
-                Description = "Personal helper to normalize PDF files."
-            };
-            rootCommand.AddOption(dryOption);
-            rootCommand.AddArgument(argumentPath);
-            rootCommand.SetHandler(NormalizePDF, dryOption, argumentPath);
-            _ = rootCommand.Invoke(args);
-        }
+RootCommand rootCommand = new()
+{
+    Description = "Personal helper to normalize PDF files."
+};
+rootCommand.AddOption(dryOption);
+rootCommand.AddArgument(argumentPath);
 
-        private static void NormalizePDF(bool dry, ICollection<string> paths)
-        {
-            PDFNormalizer normalizer = new(Utils.GetPDFPaths(paths), dry);
-            normalizer.Normalize();
-        }
-    }
-}
+rootCommand.SetHandler((dry, paths) =>
+{
+    PDFNormalizer normalizer = new(Utils.GetPDFPaths(paths), dry);
+    normalizer.Normalize();
+}, dryOption, argumentPath);
+
+rootCommand.Invoke(args);

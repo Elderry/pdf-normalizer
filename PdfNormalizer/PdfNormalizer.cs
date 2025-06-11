@@ -105,7 +105,8 @@ namespace PdfNormalizer
                 currentPdfName,
                 dry,
                 fixRecords,
-                () => {
+                () =>
+                {
                     view = new();
                     view.SetDisplayDocTitle(true);
                     catalog.SetViewerPreferences(view);

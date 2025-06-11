@@ -20,7 +20,7 @@ namespace PdfNormalizer.Common
                     if (segment.StartsWith(color.ToString(), StringComparison.CurrentCultureIgnoreCase))
                     {
                         Console.ForegroundColor = color;
-                        Console.Write(segment.Remove(0, color.ToString().Length + 1));
+                        Console.Write(segment[(color.ToString().Length + 1)..]);
                         printed = true;
                         break;
                     }

@@ -7,6 +7,9 @@ root = true
 # C# files
 [*.cs]
 
+# Enforce all style rules for C# files
+dotnet_analyzer_diagnostic.category-Style.severity = error
+
 #### Core EditorConfig Options ####
 
 # Indentation and spacing
@@ -17,6 +20,13 @@ tab_width = 4
 # New line preferences
 end_of_line = crlf
 insert_final_newline = true
+
+#### Disabled rules ####
+
+## No preference of block or expression body of method
+dotnet_diagnostic.IDE0022.severity = none
+## Keep unnecessary expression value
+dotnet_diagnostic.IDE0058.severity = none
 
 #### .NET Coding Conventions ####
 
